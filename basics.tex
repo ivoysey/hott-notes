@@ -2,46 +2,126 @@
 \usepackage{amsmath}
 \usepackage{fullpage}
 \usepackage{palatino}
+\usepackage{pbox}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
-\title{Basics}
-\author{Kuen-Bang Hou (Favonia)}
 
 \begin{document}
-\maketitle
 
 \newcommand{\path}{\mathbin{=}}
+\newcommand{\trunc}[2]{\| #2 \|_{#1}}
+\newcommand{\proj}[2]{| #2 |_{#1}}
+\newcommand{\fpbox}[1]{\fbox{\pbox[t]{\textwidth}{#1}}}
+\newcommand{\suc}{\mathtt{suc}}
 \newcommand{\TODO}[1]{\textcolor{Olive}{\fbox{\textsc{todo}} {#1}}}
 
-\section{Basic definitions}
+\section{Truncation and Connectedness}
 \begin{itemize}
-  \item
-    $X$ is \emph{contractible}.\\
-    $\Sigma (x{:}X)\,\Pi (y{:}X)\,x \path y$.
-    
+  \item[Contractible]
+
+    \fpbox{
+      $X$ is contractible.
+      \\
+      $X$ is a \emph{singleton}.
+      \\
+      $\sum_x\,\prod_y\,y \path_X x$.
+    }
+
     Intuition: You pick a point $x$ and move $y$ around, and there is always
     a path connecting $x$ and $y$. The choice of the path should be continuous
     while $y$ is moving. Take the circle as an example:
     No continuous choices are possible when $y$ travels back to the base point
     along the loop, which is to say that the circle is not contractible.
 
-  \item
-    \TODO{Truncation levels. Homotopy levels.}
+  \item[Truncated]
 
-  \item
-    \TODO{Truncation.}
+    \fpbox{
+      $X$ is $(-2)$-truncated.
+      \\
+      $X$ is contractible.
+      \\
+      $X$ is a singleton.
+    }
 
-  \item
-    $X$ is \emph{path-connected}.
-    \\
-    $X$ is $0$-connected.
-    
-    $X$ is \emph{simply-connected}.
-    \\
-    $X$ is $1$-connected.
-    
-    $X$ is \emph{$n$-connected}.
-    \\
-    $\| X \|_n$ is contractable.
+    \fpbox{
+      $X$ is $(-1)$-truncated.
+      \\
+      $X$ is a \emph{mere proposition}.
+      \\
+      $X$ is a subsingleton.
+    }
+
+    \fpbox{
+      $X$ is $0$-truncated.
+      \\
+      $X$ is a set.
+    }
+
+    \fpbox{
+      $X$ is $n$-truncated.
+      \\
+      $X$ is an $n$-type.
+    }
+
+    The $n$ here is the truncation level starting with $-2$.
+    This predicate $T_n$ is defined inductively on $n$ as follows:
+    \begin{align*}
+      T_{-2}(X) &= \text{$X$ is contractible}
+      \\
+      T_{\suc(n)}(X) &= \prod_x \prod_y T_n(x \path_X y)
+    \end{align*}
+    ($T_n$ here is just some arbitrary symbol I chose.)
+
+    The terminology ``\emph{mere} proposition'' is a compromise between two or more
+    disciplines.  In type theory, propositions are types, but in many other areas,
+    propositions do not have higher structures.
+
+    \emph{Homotopy level} is the same except that the numbers start with $0$ (shifted by $2$).
+    We never use it in our \textsc{Agda} library.
+
+  \item[Truncation]
+
+    \fpbox{
+      $\trunc{n}{X}$
+      \\
+      $n$-truncation of $X$
+    }
+
+    \fpbox{
+      $\proj{n}{x}$
+      \\
+      The projection from $X$ to $\trunc{n}{X}$
+    }
+
+    This is the projection of $X$ to the universe of $n$-types,
+    satisfying the following universal property:
+
+    \begin{quote}
+      If $Y$ is an $n$-type and there is a map $f$ from $X$ to $Y$,
+      and then there exists a (unique?)\footnote{\TODO{?}} map $\hat f$
+      from $\trunc{n}{X}$ to $Y$ where $\hat f(\proj{n}{x}) = f(x)$.
+    \end{quote}
+
+    This is definable as an higher inductive type.
+
+  \item[Connected]
+
+    \fpbox{
+      $X$ is \emph{path-connected}.
+      \\
+      $X$ is $0$-connected.
+    }
+
+    \fpbox{
+      $X$ is \emph{simply-connected}.
+      \\
+      $X$ is $1$-connected.
+    }
+
+    \fpbox{
+      $X$ is \emph{$n$-connected}.
+      \\
+      $\trunc{n}{X}$ is contractable.
+    }
 
     People use words instead of numbers for common connectedness conditions.
 \end{itemize}
