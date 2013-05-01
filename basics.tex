@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage{palatino}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\title{Basics}
+\author{Kuen-Bang Hou (Favonia)}
+
+\begin{document}
+\maketitle
+
+\newcommand{\path}{\mathbin{=}}
+\newcommand{\TODO}[1]{\textcolor{Olive}{\fbox{\textsc{todo}} {#1}}}
+
+\section{Basic definitions}
+\begin{itemize}
+  \item
+    $X$ is \emph{contractible}.\\
+    $\Sigma (x{:}X)\,\Pi (y{:}X)\,x \path y$.
+    
+    Intuition: You pick a point $x$ and move $y$ around, and there is always
+    a path connecting $x$ and $y$. The choice of the path should be continuous
+    while $y$ is moving. Take the circle as an example:
+    No continuous choices are possible when $y$ travels back to the base point
+    along the loop, which is to say that the circle is not contractible.
+
+  \item
+    \TODO{Truncation levels. Homotopy levels.}
+
+  \item
+    \TODO{Truncation.}
+
+  \item
+    $X$ is \emph{path-connected}.
+    \\
+    $X$ is $0$-connected.
+    
+    $X$ is \emph{simply-connected}.
+    \\
+    $X$ is $1$-connected.
+    
+    $X$ is \emph{$n$-connected}.
+    \\
+    $\| X \|_n$ is contractable.
+
+    People use words instead of numbers for common connectedness conditions.
+\end{itemize}
+\end{document}
