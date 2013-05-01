@@ -3,6 +3,8 @@
 \usepackage{fullpage}
 \usepackage{palatino}
 \usepackage{pbox}
+\usepackage{fancyvrb}
+\usepackage{mdframed}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 
 \begin{document}
@@ -13,6 +15,91 @@
 \newcommand{\fpbox}[1]{\fbox{\pbox[t]{\textwidth}{#1}}}
 \newcommand{\suc}{\mathtt{suc}}
 \newcommand{\TODO}[1]{\textcolor{Olive}{\fbox{\textsc{todo}} {#1}}}
+
+\begin{mdframed}
+  \paragraph{\textsc{Disclaimer}}
+  Due to my own background, the presentation here is probably biased heavily toward type theory.
+  I am still learning the classical algebraic topology, and these are just study notes that
+  help me put everything together in my mind.
+\end{mdframed}
+
+\section{What is Homotopy Type Theory?}
+
+Homotopy type theory is some type theory%
+\footnote{A good understanding of the computational behaviors
+  is lacking and thus the ``type theory'' is not fully working (yet).}
+exploring the possibility of
+giving inductive definitions to many homotopy invariants in (algebraic) topology.
+The current formulation is more or less the intentional type theory
+with two additional bits:
+\begin{enumerate}
+  \item Higher inductive types
+
+    An extension to inductive types which makes possible
+    a wide range of interesting spaces.
+
+  \item The univalence axiom
+
+    Intuitively, this asserts that isomorphic (homotopic) types are the same,
+    which effectively injects a path to the univalence
+    for each isomorphism between two types.
+    As a result, UIP (uniqueness of identity types) in general
+    does not hold since there are possibly more than one isomorphism
+    between two types.
+\end{enumerate}
+
+From the type-theoretical point of view,
+the current formulation with additional axioms is not ideal;
+the additional axioms very likely break the harmonic
+formation-introduction-elimination-computation style,
+which originates from important philosophical principles behind type theory.
+In the case of the univalent axiom,
+it is an additional introduction rule
+that does not have (obvious) matching elimination and computation rules.
+We believe that one day we will restore the harmony again,
+integrating the higher inductive types and the univalent axiom
+without violating the philosophy behind type theory.
+
+Basic concepts in type theory and homotopy theory match beautifully.
+Paths and homotopies are identity types (without the UIP),
+and homotopy between two paths are simply identity types over identity types.
+A type family $P$ indexed by $A$ is a fibration from the total space $\sum_x P(x)$ to $A$,
+where $P(x)$ is the fiber over $x$.
+A function in type theory is a functor between spaces,
+mapping not only points but also all the paths and higher structures.
+Substitution is transporting of a point in the codomain.
+
+One of the easiest example of higher inductive types is the circle.
+If we want to reason about the circle in an abstract way
+(rather than the analytic formulation),
+it can be a base point and a loop based at that point.
+Formally speaking, the circle can be expressed in the following way:
+\newcommand{\circletype}{\ensuremath{S^1}}
+\begin{Verbatim}[commandchars=\\\{\}]
+  data \circletype where
+    base : \circletype
+    loop : base = base
+\end{Verbatim}
+where the \texttt{loop} constructor inserts a generator for paths between
+two points of the same type. Traditional inductive types
+only allow generators for points.
+
+Now let's move on to the elimination and computation rules.
+To make a function $f$ of type $\circletype \to X$ for some type $X$,
+one needs to provide a point $x$ in $X$ and a loop based at $x$.
+This is similar to the induction principle for other types:
+All generators must be given with matching ingredients.
+In this case $x$ matches \texttt{base} and the loop based at $x$
+matches \texttt{loop}, forming a proper functor from $\circletype$ to $X$.
+
+One fundamental difference between type-theoretical proofs
+and those in the classical homotopy theory is that, the former requests
+all coherent data right in the induction principle, while the latter
+usually deals with the function for points and the coherence data separately.
+For example, we need to show that the constructor \texttt{loop}
+is mapped before even having the function,
+while in classical theory you define a set-theoretical mapping
+before demonstrating that \texttt{loop} is also mapped.
 
 \section{Truncation and Connectedness}
 \begin{itemize}
@@ -63,17 +150,16 @@
     }
 
     The $n$ here is the truncation level starting with $-2$.
-    This predicate $T_n$ is defined inductively on $n$ as follows:
+    This predicate is defined inductively on $n$ as follows:
     \begin{align*}
-      T_{-2}(X) &= \text{$X$ is contractible}
+      \text{$X$ is $(-2)$-truncated} &= \text{$X$ is contractible}
       \\
-      T_{\suc(n)}(X) &= \prod_x \prod_y T_n(x \path_X y)
+      \text{$X$ is $\suc(n)$-truncated} &= \prod_x\,\prod_y\,\text{$(x \path_X y)$ is $n$-truncated}
     \end{align*}
-    ($T_n$ here is just some arbitrary symbol I chose.)
 
-    The terminology ``\emph{mere} proposition'' is a compromise between two or more
-    disciplines.  In type theory, propositions are types, but in many other areas,
-    propositions do not have higher structures.
+    The terminology ``\emph{mere} proposition'' is a compromise between lots of
+    disciplines.  In type theory, propositions are as types, but in many other areas,
+    propositions are $(-1)$-truncated.
 
     \emph{Homotopy level} is the same except that the numbers start with $0$ (shifted by $2$).
     We never use it in our \textsc{Agda} library.
